@@ -2,6 +2,8 @@ package org.greenSnake.data;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -13,8 +15,8 @@ public class Planet {
     private String id;
     @Column(length = 500,nullable = false)
     private String name;
-    @OneToMany(mappedBy = "fromPlanet")
-    private List<Ticket> fromTickets;
-    @OneToMany(mappedBy = "toPlanet")
-    private List<Ticket> toTickets;
+    @OneToMany(mappedBy = "fromPlanet",cascade = CascadeType.ALL)
+    private List<Ticket> fromTickets = new ArrayList<>();
+    @OneToMany(mappedBy = "toPlanet",cascade = CascadeType.ALL)
+    private List<Ticket> toTickets = new ArrayList<>();
 }

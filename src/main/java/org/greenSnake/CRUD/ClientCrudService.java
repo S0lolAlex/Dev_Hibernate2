@@ -5,7 +5,6 @@ import org.greenSnake.Utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import org.hibernate.query.hql.HqlInterpretationException;
 
 import java.util.List;
@@ -15,9 +14,9 @@ public class ClientCrudService {
 
 
     public boolean create(Client client) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()){
+            transaction = session.beginTransaction();
             session.persist(client);
             transaction.commit();
             return true;
@@ -28,23 +27,19 @@ public class ClientCrudService {
         }
     }
 
-    public String getById(long id) {
-        Session session = sessionFactory.openSession();
-        try {
-            Client client = session.get(Client.class, id);
-            return client.getName();
+    public Client getById(long id) {
+        try (Session session = sessionFactory.openSession()){
+            return session.get(Client.class, id);
         }catch (HqlInterpretationException e){
             e.printStackTrace();
-            return "error";
+            return null;
         }
     }
 
-    public void setName(long id, String name) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            Client client = session.get(Client.class, id);
-            client.setName(name);
+    public void update(Client client) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()){
+            transaction = session.beginTransaction();
             session.persist(client);
             transaction.commit();
         }catch (HqlInterpretationException e){
@@ -54,24 +49,22 @@ public class ClientCrudService {
     }
 
     public boolean isDelete(Client client) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try{
+        Transaction transaction = null;
+        try(Session session = sessionFactory.openSession()){
+            transaction = session.beginTransaction();
             session.remove(client);
             transaction.commit();
             return true;
         } catch (HqlInterpretationException e) {
+            transaction.rollback();
+            e.printStackTrace();
             return false;
         }
     }
 
     public List<Client> listAll() {
-        Session session = sessionFactory.openSession();
-        try {
-            Query<Client> clients = session.createQuery("from Client", Client.class);
-            List<Client> list = clients.list();
-            session.close();
-            return list;
+        try (Session session = sessionFactory.openSession()){
+            return session.createQuery("from Client", Client.class).list();
         } catch (HqlInterpretationException e) {
             e.printStackTrace();
             return null;

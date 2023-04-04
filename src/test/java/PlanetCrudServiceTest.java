@@ -21,8 +21,8 @@ public class PlanetCrudServiceTest {
         planet.setId("NEW1");
         planet.setName("NewPlanet");
         service.create(planet);
-        String med = service.getById(planet.getId());
-        Assertions.assertEquals(planet.getName(),med);
+        Planet med = service.getById(planet.getId());
+        Assertions.assertEquals(planet.getName(),med.getName());
     }
 
     @Test
@@ -36,16 +36,14 @@ public class PlanetCrudServiceTest {
     public void testSetName(){
         Planet planet = getAnyPlanet();
         String id = planet.getId();
-        service.setName(id,"newName");
-        String actual = service.getById(planet.getId());
-        Assertions.assertEquals("newName",actual);
+        planet.setName("newPlanet");
+        service.update(planet);
+        Assertions.assertEquals(service.getById(id).getName(),planet.getName());
     }
     @Test
     public void testThatDelete(){
         Planet planet = getAnyPlanet();
         TicketCrudService tickets = new TicketCrudService();
-        planet.getFromTickets().forEach(tickets::isDelete);
-        planet.getToTickets().forEach(tickets::isDelete);
         boolean actual = service.isDelete(planet);
         Assertions.assertTrue(actual);
     }

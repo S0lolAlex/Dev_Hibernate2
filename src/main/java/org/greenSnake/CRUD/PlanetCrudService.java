@@ -1,12 +1,10 @@
 package org.greenSnake.CRUD;
 
-import org.greenSnake.data.Client;
 import org.greenSnake.data.Planet;
 import org.greenSnake.Utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import org.hibernate.query.hql.HqlInterpretationException;
 
 import java.util.List;
@@ -15,9 +13,9 @@ public class PlanetCrudService {
     private SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
 
     public boolean create(Planet planet) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
+        Transaction transaction = null;
+        try(Session session = sessionFactory.openSession();) {
+            transaction = session.beginTransaction();
             session.persist(planet);
             transaction.commit();
             return true;
@@ -28,24 +26,20 @@ public class PlanetCrudService {
         }
     }
 
-    public String getById(String id) {
-        Session session = sessionFactory.openSession();
-        try {
-            Planet planet = session.get(Planet.class, id);
-            return planet.getName();
+    public Planet getById(String id) {
+        try (Session session = sessionFactory.openSession()){
+            return session.get(Planet.class, id);
         } catch (HqlInterpretationException e) {
             e.printStackTrace();
-            return "error";
+            return null;
         }
     }
 
-    public void setName(String id, String name) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            Planet planet = session.get(Planet.class, id);
-            planet.setName(name);
-            session.persist(planet);
+    public void update(Planet planet) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()){
+            transaction = session.beginTransaction();
+            session.update(planet);
             transaction.commit();
         } catch (HqlInterpretationException e) {
             transaction.rollback();
@@ -65,12 +59,8 @@ public class PlanetCrudService {
     }
 
     public List<Planet> listAll() {
-        Session session = sessionFactory.openSession();
-        try {
-            Query<Planet> planets = session.createQuery("from Planet", Planet.class);
-            List<Planet> list = planets.list();
-            session.close();
-            return list;
+        try (Session session = sessionFactory.openSession()){
+            return session.createQuery("from Planet", Planet.class).list();
         } catch (HqlInterpretationException e) {
             e.printStackTrace();
             return null;

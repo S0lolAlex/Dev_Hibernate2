@@ -19,29 +19,29 @@ public class ClientCrudServiceTest {
         Client client = new Client();
         client.setName("Pavel");
         service.create(client);
-        String anton = service.getById(client.getId());
-        Assertions.assertEquals(client.getName(),anton);
+        Client pavel = service.getById(client.getId());
+        Assertions.assertEquals(client.getName(),pavel.getName());
     }
 
     @Test
     public void testGetById(){
         Client client = getAnyClient();
-        System.out.println("name = " + service.getById(client.getId()));
-
+        long id = client.getId();
+        System.out.println(service.getById(id));
     }
 
     @Test
-    public void testSetName(){
+    public void testUpdate(){
         Client client = getAnyClient();
         long id = client.getId();
-        service.setName(id,"newName");
-        System.out.println(service.getById(id));
+        client.setName("newName");
+        service.update(client);
+        Assertions.assertEquals(service.getById(client.getId()).getName(),client.getName());
     }
     @Test
     public void testThatDelete(){
         Client client = getAnyClient();
         TicketCrudService tickets = new TicketCrudService();
-        client.getTickets().forEach(tickets::isDelete);
         boolean actual = service.isDelete(client);
         Assertions.assertTrue(actual);
     }

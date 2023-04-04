@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+
 public class TicketCrudServiceTest {
     TicketCrudService ticketCrudService;
     ClientCrudService clientCrudService;
@@ -53,6 +54,7 @@ public class TicketCrudServiceTest {
         Ticket ticket = new Ticket();
         ticket.setFromPlanet(getAnyPlanet());
         ticket.setToPlanet(getAnyPlanet());
+        ticket.setCreatedAt(new Date());
 
         Assertions.assertFalse(new TicketCrudService().create(ticket));
     }
@@ -62,7 +64,7 @@ public class TicketCrudServiceTest {
         Ticket ticket = new Ticket();
         ticket.setClient(getAnyClient());
         ticket.setToPlanet(getAnyPlanet());
-        System.out.println(ticket);
+        ticket.setCreatedAt(new Date());
 
         Assertions.assertFalse(new TicketCrudService().create(ticket));
     }
@@ -71,6 +73,7 @@ public class TicketCrudServiceTest {
     void createTestNullToPlanet() {
         Ticket ticket = new Ticket();
         ticket.setClient(getAnyClient());
+        ticket.setCreatedAt(new Date());
         ticket.setFromPlanet(getAnyPlanet());
 
         Assertions.assertFalse(new TicketCrudService().create(ticket));

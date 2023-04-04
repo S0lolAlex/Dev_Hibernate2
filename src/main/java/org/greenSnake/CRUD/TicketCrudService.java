@@ -6,30 +6,28 @@ import org.hibernate.PropertyValueException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import org.hibernate.query.hql.HqlInterpretationException;
 
-import java.util.Date;
 import java.util.List;
 
 public class TicketCrudService {
     private SessionFactory sessionFactory = HibernateUtil.getInstance().getSessionFactory();
 
     public boolean create(Ticket ticket) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()){
+            transaction = session.beginTransaction();
             session.persist(ticket);
             transaction.commit();
             return true;
-        } catch (PropertyValueException e) {
+        } catch (PropertyValueException e ) {
+            transaction.rollback();
             return false;
         }
     }
 
     public Ticket getById(long id) {
-        Session session = sessionFactory.openSession();
-        try {
+        try (Session session = sessionFactory.openSession()){
             return session.get(Ticket.class, id);
         } catch (HqlInterpretationException e) {
             e.printStackTrace();
@@ -38,9 +36,9 @@ public class TicketCrudService {
     }
 
     public void update(Ticket ticket) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()){
+            transaction = session.beginTransaction();
             session.merge(ticket);
             transaction.commit();
         } catch (HqlInterpretationException e) {
@@ -50,9 +48,9 @@ public class TicketCrudService {
     }
 
     public boolean isDelete(Ticket ticket) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try{
+        Transaction transaction = null;
+        try(Session session = sessionFactory.openSession()){
+            transaction = session.beginTransaction();
             session.remove(ticket);
             transaction.commit();
             return true;
@@ -62,10 +60,8 @@ public class TicketCrudService {
     }
 
     public List<Ticket> listAll() {
-        Session session = sessionFactory.openSession();
-        try {
-            Query<Ticket> ticket = session.createQuery("from Ticket", Ticket.class);
-            return ticket.list();
+        try (Session session = sessionFactory.openSession()){
+            return session.createQuery("from Ticket", Ticket.class).list();
         } catch (HqlInterpretationException e) {
             e.printStackTrace();
             return null;
