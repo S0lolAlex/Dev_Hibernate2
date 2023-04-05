@@ -15,8 +15,8 @@ public class Planet {
     private String id;
     @Column(length = 500,nullable = false)
     private String name;
-    @OneToMany(mappedBy = "fromPlanet",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "fromPlanet",cascade = CascadeType.REMOVE)
     private List<Ticket> fromTickets = new ArrayList<>();
-    @OneToMany(mappedBy = "toPlanet",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "toPlanet",cascade = CascadeType.REMOVE)
     private List<Ticket> toTickets = new ArrayList<>();
 }

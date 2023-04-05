@@ -28,7 +28,7 @@ public class PlanetCrudService {
 
     public Planet getById(String id) {
         try (Session session = sessionFactory.openSession()){
-            return session.get(Planet.class, id);
+            return session.find(Planet.class, id);
         } catch (HqlInterpretationException e) {
             e.printStackTrace();
             return null;
@@ -47,7 +47,7 @@ public class PlanetCrudService {
         }
     }
 
-    public boolean isDelete(Planet planet) {
+    public boolean delete(Planet planet) {
         try(Session session = sessionFactory.openSession()){
             Transaction transaction = session.beginTransaction();
             session.remove(planet);

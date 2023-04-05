@@ -1,3 +1,4 @@
+import jakarta.persistence.EntityNotFoundException;
 import org.greenSnake.CRUD.PlanetCrudService;
 import org.greenSnake.CRUD.TicketCrudService;
 import org.greenSnake.data.Planet;
@@ -43,8 +44,8 @@ public class PlanetCrudServiceTest {
     @Test
     public void testThatDelete(){
         Planet planet = getAnyPlanet();
-        TicketCrudService tickets = new TicketCrudService();
-        boolean actual = service.isDelete(planet);
-        Assertions.assertTrue(actual);
+        String id = planet.getId();
+        service.delete(planet);
+        Assertions.assertEquals(null, service.getById(id));
     }
 }

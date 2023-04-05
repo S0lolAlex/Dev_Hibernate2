@@ -15,6 +15,6 @@ public class Client {
     private long id;
     @Column(name = "name", length = 200, nullable = false)
     private String name;
-    @OneToMany(mappedBy = "client",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "client",cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
     private List<Ticket> tickets = new ArrayList<>();
 }

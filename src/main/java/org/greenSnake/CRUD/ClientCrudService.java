@@ -29,7 +29,7 @@ public class ClientCrudService {
 
     public Client getById(long id) {
         try (Session session = sessionFactory.openSession()){
-            return session.get(Client.class, id);
+            return session.find(Client.class, id);
         }catch (HqlInterpretationException e){
             e.printStackTrace();
             return null;
@@ -40,7 +40,7 @@ public class ClientCrudService {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            session.persist(client);
+            session.update(client);
             transaction.commit();
         }catch (HqlInterpretationException e){
             transaction.rollback();
@@ -48,7 +48,7 @@ public class ClientCrudService {
         }
     }
 
-    public boolean isDelete(Client client) {
+    public boolean delete(Client client) {
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();

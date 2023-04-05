@@ -28,7 +28,7 @@ public class TicketCrudService {
 
     public Ticket getById(long id) {
         try (Session session = sessionFactory.openSession()){
-            return session.get(Ticket.class, id);
+            return session.find(Ticket.class, id);
         } catch (HqlInterpretationException e) {
             e.printStackTrace();
             return null;
@@ -39,7 +39,7 @@ public class TicketCrudService {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            session.merge(ticket);
+            session.update(ticket);
             transaction.commit();
         } catch (HqlInterpretationException e) {
             transaction.rollback();

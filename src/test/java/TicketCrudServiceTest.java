@@ -56,7 +56,7 @@ public class TicketCrudServiceTest {
         ticket.setToPlanet(getAnyPlanet());
         ticket.setCreatedAt(new Date());
 
-        Assertions.assertFalse(new TicketCrudService().create(ticket));
+        Assertions.assertThrows(IllegalStateException.class, () -> new TicketCrudService().create(ticket));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class TicketCrudServiceTest {
         ticket.setToPlanet(getAnyPlanet());
         ticket.setCreatedAt(new Date());
 
-        Assertions.assertFalse(new TicketCrudService().create(ticket));
+        Assertions.assertThrows(IllegalStateException.class, () -> new TicketCrudService().create(ticket));
     }
 
     @Test
@@ -76,7 +76,7 @@ public class TicketCrudServiceTest {
         ticket.setCreatedAt(new Date());
         ticket.setFromPlanet(getAnyPlanet());
 
-        Assertions.assertFalse(new TicketCrudService().create(ticket));
+        Assertions.assertThrows(IllegalStateException.class, () -> new TicketCrudService().create(ticket));
     }
 
     @Test

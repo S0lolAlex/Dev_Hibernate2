@@ -36,13 +36,13 @@ public class ClientCrudServiceTest {
         long id = client.getId();
         client.setName("newName");
         service.update(client);
-        Assertions.assertEquals(service.getById(client.getId()).getName(),client.getName());
+        Assertions.assertEquals(service.getById(id).getName(),client.getName());
     }
     @Test
     public void testThatDelete(){
         Client client = getAnyClient();
-        TicketCrudService tickets = new TicketCrudService();
-        boolean actual = service.isDelete(client);
-        Assertions.assertTrue(actual);
+        long id = client.getId();
+        service.delete(client);
+        Assertions.assertEquals(null, service.getById(id));
     }
 }
